@@ -1,6 +1,8 @@
 <template>
   <div id="app">
-    <Timetable/>
+    <!-- 9140 = skarpnäck, https://api.sl.se/api2/typeahead.json?key=&searchstring=&stationsonly=True&maxresults=10-->
+    <Timetable siteId="9141" dir="1" />
+    <Timetable siteId="9118" dir="2" destFilter="Skarpnäck"/>
   </div>
 </template>
 
@@ -21,7 +23,8 @@ export default {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
+  background-color:black;
   color: #2c3e50;
-  margin-top: 60px;
+  margin-top: 0px;
 }
 </style>
