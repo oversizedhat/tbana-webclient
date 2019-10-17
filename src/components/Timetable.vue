@@ -35,7 +35,7 @@ export default {
     dataLoaded() {
       //console.log(this.request.responseText);
       this.trainTable = JSON.parse(this.request.responseText);
-      if (this.destFilter) {
+      if (this.destFilter && this.destFilter != "") {
         this.trainTable = this.trainTable.filter(train => train.Destination == this.destFilter);
       }
       this.trainTable = this.trainTable.slice(0,3);

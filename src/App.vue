@@ -1,8 +1,8 @@
 <template>
   <div id="app">
     <!-- 9140 = skarpnäck, https://api.sl.se/api2/typeahead.json?key=&searchstring=&stationsonly=True&maxresults=10-->
-    <Timetable siteId="9141" dir="1" />
-    <Timetable siteId="9118" dir="2" destFilter="Skarpnäck"/>
+    <Timetable :siteId=home.siteId :dir=home.dir :destFilter=home.filter />
+    <Timetable :siteId=work.siteId :dir=work.dir :destFilter=work.filter />
   </div>
 </template>
 
@@ -11,6 +11,10 @@ import Timetable from './components/Timetable.vue'
 
 export default {
   name: 'app',
+  props:{
+    home: Object,
+    work: Object
+  },
   components: {
     Timetable
   }
