@@ -1,13 +1,12 @@
 <template>
-  <div id="home">
+  <div>
       <router-link v-bind:style="{padding:'8px'}" v-for="route in travelRoutes" v-bind:key="route.path" :to=route.path>{{route.path}}</router-link>
   </div>
 </template>
 
 <script>
-
 export default {
-  name: 'home',
+  name: 'Home',
   props:{
    travelRoutes: {
       type: Array,
@@ -18,14 +17,9 @@ export default {
 }
 </script>
 
-<style>
-#home {
-  font-family: 'Avenir', Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
+<style scoped>
+div {
   font-size: larger;
-  background-color:black;
   color: #dedede;
   margin-top: 20px;
   display: flex;

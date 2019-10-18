@@ -12,8 +12,7 @@
 
 <script>
 import moment from 'moment';
-
-const SERVICE_END_POINT = 'https://zx17defqsk.execute-api.eu-north-1.amazonaws.com/production';
+import config from '../config.js';
 
 moment.locale('sv');
 
@@ -33,7 +32,6 @@ export default {
   },
   methods: {
     dataLoaded() {
-      //console.log(this.request.responseText);
       this.trainTable = JSON.parse(this.request.responseText);
       if (this.destFilter && this.destFilter != "") {
         this.trainTable = this.trainTable.filter(train => train.Destination == this.destFilter);
@@ -42,9 +40,13 @@ export default {
 
       this.statusMessage = this.trainTable[0].StopAreaName + " mot "+this.trainTable[0].Destination;
       this.trainTable.forEach((train) => {
-        train.moment = moment(train.TimeTabledDateTime)
+        train.moment = moment(train.TimeTabledDateTime);
       })
+      
       this.update();
+
+      clearInterval(this.updateInterval);
+      this.updateInterval = setInterval(() => {  this.update() }, 1000);
     },
     update() {
       this.renderTick++;
@@ -68,14 +70,13 @@ export default {
     },
     refreshData() {
       this.request = new XMLHttpRequest();
-      this.request.open('GET', SERVICE_END_POINT + "?siteId="+this.siteId+"&dir="+this.dir, true);
+      this.request.open('GET', config.mode == "dev"?`mockres${this.siteId}.json`:`${config.apiEndPoint}?siteId=${this.siteId}&dir=${this.dir}`, true);
       this.request.onload = this.dataLoaded;
-      this.request.send(null);
+      this.request.send();
     }
   },
   mounted() {
     this.refreshData();
-    this.updateInterval = setInterval(() => {  this.update() }, 1000);
   },
   destroyed() {
     clearInterval(this.updateInterval);
