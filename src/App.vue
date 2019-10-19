@@ -1,6 +1,6 @@
 <template>
   <div id="app">
-    <!-- 9140 = skarpnäck, https://api.sl.se/api2/typeahead.json?key=&searchstring=&stationsonly=True&maxresults=10-->
+    <HelpBar />
     <Timetable :siteId=home.siteId :dir=home.dir :destFilter=home.filter />
     <Timetable :siteId=work.siteId :dir=work.dir :destFilter=work.filter />
   </div>
@@ -8,6 +8,7 @@
 
 <script>
 import Timetable from './components/Timetable.vue'
+import HelpBar from './components/HelpBar.vue'
 
 export default {
   name: 'app',
@@ -16,7 +17,8 @@ export default {
     work: Object
   },
   components: {
-    Timetable
+    Timetable,
+    HelpBar
   }
 }
 </script>
