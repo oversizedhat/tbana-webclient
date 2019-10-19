@@ -6,7 +6,8 @@
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
     "lint": "vue-cli-service lint",
-    "siteids" : "node utils/siteidsutil.js"
+    "siteids" : "node utils/siteidsutil.js",
+    "deploy": "npm run build && aws s3 cp dist s3://www.coommuter.com --recursive"
   },
   "dependencies": {
     "core-js": "^2.6.5",
