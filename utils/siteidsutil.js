@@ -13,7 +13,7 @@ const test = "Bagarmossen";
 AUTH_KEY = process.argv[2];
 
 if (!AUTH_KEY) {
-  console.error("Needs auto key! ex: npm run siteids YOUR_TRAFIKLAB_KEY\n\n");
+  console.error("Needs auth key! 'npm run siteids YOUR_TRAFIKLAB_KEY'\n\n");
   process.exit(1);
 }
 

@@ -6,8 +6,9 @@
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
     "lint": "vue-cli-service lint",
-    "siteids" : "node utils/siteidsutil.js",
-    "deploy": "npm run build && aws s3 cp dist s3://www.coommuter.com --recursive"
+    "siteids": "node utils/siteidsutil.js",
+    "deploy": "npm run build && aws s3 cp dist s3://www.coommuter.com --recursive",
+    "test": "jest --watchAll"
   },
   "dependencies": {
     "core-js": "^2.6.5",
@@ -22,6 +23,7 @@
     "babel-eslint": "^10.0.1",
     "eslint": "^5.16.0",
     "eslint-plugin-vue": "^5.0.0",
+    "jest": "~24.9.0",
     "vue-template-compiler": "^2.6.10"
   },
   "eslintConfig": {
