@@ -10,14 +10,24 @@ Vue.config.productionTip = false
 Vue.use(VueRouter)
 
 function getRoute(from,to){
-  return { path: '/testing123', component: App, props: {home:{siteId:model.getSiteId(from), dir:model.getDirection(from,to)}, work:{siteId:model.getSiteId(to), dir:model.getDirection(to,from), filter:"Skarpnäck"}}}
+  return { path: '/testing1', component: App, props: {home:{siteId:model.getSiteId(from), dir:model.getDirection(from,to)}, work:{siteId:model.getSiteId(to), dir:model.getDirection(to,from), filter:["Skarpnäck"]}}}
+}
+
+function getRouteWithFilter(from,to){
+  return { path: '/testing2', component: App, 
+    props: {
+      home:{siteId:model.getSiteId(from), dir:model.getDirection(from,to), filter:model.getPossibleEndSites(from, to)}, 
+      work:{siteId:model.getSiteId(to), dir:model.getDirection(to,from), filter:model.getPossibleEndSites(to, from)}
+    }
+  }
 }
 
 const travelRoutes = [
   getRoute('Skarpnäck', 'Gullmarsplan'),
-  { path: '/bagarmossen-rådmansgatan', alias: '/oscar', component: App, props: {home:{siteId:"9141", dir:"1"}, work:{siteId:"9118", dir:"2", filter:"Skarpnäck"}}},
-  { path: '/bagarmossen-hötorget', alias: '/anna', component: App, props: {home:{siteId:"9141", dir:"1"}, work:{siteId:"9119", dir:"2", filter:"Skarpnäck"}}},
-  { path: '/skarpnäck-rådmansgatan', alias: '/kristian', component: App, props: {home:{siteId:"9140", dir:"1"}, work:{siteId:"9118", dir:"2", filter:"Skarpnäck"}}},
+  getRouteWithFilter('Skarpnäck', 'Gullmarsplan'),
+  { path: '/bagarmossen-rådmansgatan', alias: '/oscar', component: App, props: {home:{siteId:"9141", dir:"1"}, work:{siteId:"9118", dir:"2", filter:["Skarpnäck"]}}},
+  { path: '/bagarmossen-hötorget', alias: '/anna', component: App, props: {home:{siteId:"9141", dir:"1"}, work:{siteId:"9119", dir:"2", filter:["Skarpnäck"]}}},
+  { path: '/skarpnäck-rådmansgatan', alias: '/kristian', component: App, props: {home:{siteId:"9140", dir:"1"}, work:{siteId:"9118", dir:"2", filter:["Skarpnäck"]}}},
 ]
 
 const allRoutes = travelRoutes.concat([
