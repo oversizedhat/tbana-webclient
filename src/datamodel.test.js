@@ -1,11 +1,11 @@
-import {getSiteId, getDirection, getPossibleEndSites} from './datamodel';
+import {getSiteId, getDirection, getPossibleEndSiteFilter} from './datamodel';
 
-test.only('getPossibleEndSites', () => {
-  expect(getPossibleEndSites("Åkeshov", "Bagarmossen")).toEqual(["Bagarmossen", "Skarpnäck"]);
+test('getPossibleEndSiteFilter, Åkeshov - Bagarmossen', () => {
+  expect(getPossibleEndSiteFilter("Åkeshov", "Bagarmossen")).toEqual(["Bagarmossen", "Skarpnäck"]);
 });
 
-test.only('getPossibleEndSites', () => {
-  expect(getPossibleEndSites("Åkeshov", "Björkhagen")).toEqual(["Björkhagen", "Kärrtorp", "Bagarmossen", "Skarpnäck"]);
+test('getPossibleEndSiteFilter, Åkeshov - Björkhagen', () => {
+  expect(getPossibleEndSiteFilter("Åkeshov", "Björkhagen")).toEqual(["Björkhagen", "Kärrtorp", "Bagarmossen", "Skarpnäck"]);
 });
 
 test('getSiteId', () => {

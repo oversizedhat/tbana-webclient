@@ -3,31 +3,27 @@ import App from './App.vue'
 import VueRouter from 'vue-router'
 import Home from './Home.vue'
 import config from './config';
-import model from './datamodel';
 
 Vue.config.productionTip = false
 
 Vue.use(VueRouter)
 
-function getRoute(from,to){
-  return { path: '/testing1', component: App, props: {home:{siteId:model.getSiteId(from), dir:model.getDirection(from,to)}, work:{siteId:model.getSiteId(to), dir:model.getDirection(to,from), filter:["Skarpnäck"]}}}
-}
-
-function getRouteWithFilter(from,to){
-  return { path: '/testing2', component: App, 
+function getRouteWithFilter(from, to, alias){
+  return { 
+    path: '/'+(from+'-'+to).toLowerCase(), 
+    component: App,
+    alias: alias,
     props: {
-      home:{siteId:model.getSiteId(from), dir:model.getDirection(from,to), filter:model.getPossibleEndSites(from, to)}, 
-      work:{siteId:model.getSiteId(to), dir:model.getDirection(to,from), filter:model.getPossibleEndSites(to, from)}
+      from: from,
+      to: to
     }
   }
 }
 
 const travelRoutes = [
-  getRoute('Skarpnäck', 'Gullmarsplan'),
-  getRouteWithFilter('Skarpnäck', 'Gullmarsplan'),
-  { path: '/bagarmossen-rådmansgatan', alias: '/oscar', component: App, props: {home:{siteId:"9141", dir:"1"}, work:{siteId:"9118", dir:"2", filter:["Skarpnäck"]}}},
-  { path: '/bagarmossen-hötorget', alias: '/anna', component: App, props: {home:{siteId:"9141", dir:"1"}, work:{siteId:"9119", dir:"2", filter:["Skarpnäck"]}}},
-  { path: '/skarpnäck-rådmansgatan', alias: '/kristian', component: App, props: {home:{siteId:"9140", dir:"1"}, work:{siteId:"9118", dir:"2", filter:["Skarpnäck"]}}},
+  getRouteWithFilter('Bagarmossen', 'Rådmansgatan', '/oscar'),
+  getRouteWithFilter('Bagarmossen', 'Hötorget', '/anna'),
+  getRouteWithFilter('Skarpnäck', 'Rådmansgatan', '/kristian')
 ]
 
 const allRoutes = travelRoutes.concat([

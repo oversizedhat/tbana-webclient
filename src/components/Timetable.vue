@@ -34,18 +34,9 @@ export default {
     dataLoaded() {
       this.trainTable = JSON.parse(this.request.responseText);
       if (this.destFilter && this.destFilter != "") {
-       // if (Array.isArray(this.destFilter)) {
-         console.log(this.siteId);
-         console.log(this.destFilter);
-         console.log(this.trainTable);
-          this.trainTable = this.trainTable.filter(train => this.destFilter.includes(train.Destination));
-          console.log(this.trainTable);
-       /* } else {
-          this.trainTable = this.trainTable.filter(train => train.Destination == this.destFilter);
-        }*/
+        this.trainTable = this.trainTable.filter(train => this.destFilter.includes(train.Destination));
       }
       this.trainTable = this.trainTable.slice(0,3);
-
       this.statusMessage = this.trainTable[0].StopAreaName + " mot "+this.trainTable[0].Destination;
       this.trainTable.forEach((train) => {
         train.moment = moment(train.TimeTabledDateTime);

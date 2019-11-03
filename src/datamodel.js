@@ -19,7 +19,12 @@ lines.forEach(line => {
 export default {
   getSiteId,
   getDirection,
-  getPossibleEndSites
+  getPossibleEndSiteFilter,
+  getAllSites
+}
+
+export function getAllSites() {
+  return Object.keys(siteMap);
 }
 
 export function getSiteId(name){
@@ -53,14 +58,19 @@ export function getDirection(fromStation,toStation){
   throw "Failed to find direction";
 }
 
-export function getPossibleEndSites(fromStation, toStation, line) {
+export function getPossibleEndSiteFilter(fromStation, toStation, line) {
   const dir = getDirection(fromStation, toStation);
   if (!line) line = lineWithBoth(fromStation, toStation);
-  const indexOfTo = line.findIndex((elem)=>{return elem.name === toStation});
+  if (!line) {
+    // eslint-disable-next-line
+    console.log("Unable to find line with both, so lets not apply a destination filter");
+    return null;
+  }
 
+  const indexOfTo = line.findIndex((elem)=>{return elem.name === toStation});
   const okSites = [];
   if (dir === "1") {
-    for (let i=indexOfTo; i>0; i--) {
+    for (let i=indexOfTo; i>=0; i--) {
       okSites.push(line[i].name);
     }
   } else {

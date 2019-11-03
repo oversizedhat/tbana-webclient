@@ -7,18 +7,35 @@
 </template>
 
 <script>
-import Timetable from './components/Timetable.vue'
-import HelpBar from './components/HelpBar.vue'
+import Timetable from './components/Timetable.vue';
+import HelpBar from './components/HelpBar.vue';
+import model from './datamodel';
 
 export default {
   name: 'app',
   props:{
-    home: Object,
-    work: Object
+    from: String,
+    to: String
   },
   components: {
     Timetable,
     HelpBar
+  },
+  computed: {
+    home: function () {
+      return { 
+        siteId:model.getSiteId(this.from), 
+        dir:model.getDirection(this.from, this.to), 
+        filter:model.getPossibleEndSiteFilter(this.from, this.to) 
+      };
+    },
+    work: function () {
+      return { 
+        siteId:model.getSiteId(this.to), 
+        dir:model.getDirection(this.to, this.from), 
+        filter:model.getPossibleEndSiteFilter(this.to, this.from) 
+      };
+    }
   }
 }
 </script>
