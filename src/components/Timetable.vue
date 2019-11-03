@@ -33,8 +33,11 @@ export default {
   methods: {
     dataLoaded() {
       this.trainTable = JSON.parse(this.request.responseText);
-      if (this.destFilter && this.destFilter != "") {
-        this.trainTable = this.trainTable.filter(train => this.destFilter.includes(train.Destination));
+      if (this.destFilter && this.destFilter.length > 0) {
+        const filteredTable = this.trainTable.filter(train => this.destFilter.includes(train.Destination));
+        if (filteredTable.length > 0){
+          this.trainTable = filteredTable;
+        }
       }
       this.trainTable = this.trainTable.slice(0,3);
       this.statusMessage = this.trainTable[0].StopAreaName + " mot "+this.trainTable[0].Destination;
