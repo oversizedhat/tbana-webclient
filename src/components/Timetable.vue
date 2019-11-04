@@ -23,6 +23,7 @@ export default {
     trainTable: [],
     renderTick:0,
     updateInterval:-1,
+    timeout:0,
     styleObject: { 'background-color': 'black' },
   }),
   props: {
@@ -31,43 +32,54 @@ export default {
     destFilter: Array
   },
   methods: {
+    hasValidTrainData() {
+      return this.trainTable && this.trainTable.length > 0;
+    },
     dataLoaded() {
-      this.trainTable = JSON.parse(this.request.responseText);
-      if (this.destFilter && this.destFilter.length > 0) {
-        const filteredTable = this.trainTable.filter(train => this.destFilter.includes(train.Destination));
-        if (filteredTable.length > 0){
-          this.trainTable = filteredTable;
+      this.clearAllIntervals();
+      try {
+        this.trainTable = JSON.parse(this.request.responseText);
+     
+        if (this.destFilter && this.destFilter.length > 0) {
+          const filteredTable = this.trainTable.filter(train => this.destFilter.includes(train.Destination));
+          if (filteredTable.length > 0){
+            this.trainTable = filteredTable;
+          }
         }
+        this.trainTable = this.trainTable.slice(0,3);
+        this.statusMessage = this.trainTable[0].StopAreaName + " mot "+this.trainTable[0].Destination;
+        this.trainTable.forEach((train) => {
+          train.moment = moment(train.TimeTabledDateTime);
+        })
+        
+        this.update();
+        this.updateInterval = setInterval(() => {  this.update() }, 1000);
+      } catch (e) {
+        // eslint-disable-next-line
+        console.info("Failed to load new data, trying again in 1 sec.");
+        this.timeout = setTimeout(() => {  this.refreshData() }, 1000);
       }
-      this.trainTable = this.trainTable.slice(0,3);
-      this.statusMessage = this.trainTable[0].StopAreaName + " mot "+this.trainTable[0].Destination;
-      this.trainTable.forEach((train) => {
-        train.moment = moment(train.TimeTabledDateTime);
-      })
-      
-      this.update();
-
-      clearInterval(this.updateInterval);
-      this.updateInterval = setInterval(() => {  this.update() }, 1000);
     },
     update() {
-      this.renderTick++;
-      let currentTimeDiff = moment(this.trainTable[0].TimeTabledDateTime).diff(moment());
-     
-      let textColor;
-      if (currentTimeDiff < 2*60*1000) {
-        textColor = "red";
-      } else if (currentTimeDiff < 5*60*1000) {
-        textColor = "orange";
-      } else {
-        textColor = "green";
-      }
-      this.styleObject['background-color'] = textColor;
+      if (this.hasValidTrainData()) {
+        this.renderTick++;
+        let currentTimeDiff = moment(this.trainTable[0].TimeTabledDateTime).diff(moment());
+      
+        let textColor;
+        if (currentTimeDiff < 2*60*1000) {
+          textColor = "red";
+        } else if (currentTimeDiff < 5*60*1000) {
+          textColor = "orange";
+        } else {
+          textColor = "green";
+        }
+        this.styleObject['background-color'] = textColor;
 
-      const trainIsLeaving = currentTimeDiff < -10000;
-      //limit data refresh to each 10 sec during train depature
-      if (trainIsLeaving && this.renderTick%10 === 0) {
-        this.refreshData();
+        const trainIsLeaving = currentTimeDiff < -10000;
+        //limit data refresh to each 10 sec during train depature
+        if (trainIsLeaving && this.renderTick%10 === 0) {
+          this.refreshData();
+        }
       }
     },
     refreshData() {
@@ -75,13 +87,17 @@ export default {
       this.request.open('GET', config.mode == "dev"?`mockres${this.siteId}.json`:`${config.apiEndPoint}?siteId=${this.siteId}&dir=${this.dir}`, true);
       this.request.onload = this.dataLoaded;
       this.request.send();
+    },
+     clearAllIntervals() {
+      clearInterval(this.updateInterval);
+      clearTimeout(this.timeout);
     }
   },
   mounted() {
     this.refreshData();
   },
   destroyed() {
-    clearInterval(this.updateInterval);
+    this.clearAllIntervals();
   }
 }
 </script>
