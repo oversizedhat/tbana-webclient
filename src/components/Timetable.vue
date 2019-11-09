@@ -1,32 +1,30 @@
 <template>
-  <div :key="renderTick" v-bind:style="styleObject">
-    <h2>{{ statusMessage }} </h2>
-   
-    <ul id="trains">
-      <li v-for="item in trainTable" v-bind:key="item.TimeTableDateTime">
-        {{ item.moment.fromNow() }}
-      </li>
-    </ul>
+  <div :key="renderTick">
+    <h2>{{ siteName }} </h2>
+    <Train :train=item v-for="item in trainTable" v-bind:key="item.ExpectedDateTime" />
   </div>
 </template>
 
 <script>
 import moment from 'moment';
 import config from '../config.js';
+import Train from './Train.vue';
 
 moment.locale('sv');
 
 export default {
   name: 'Timetable',
   data: () => ({
-    statusMessage: "Laddar..",
     trainTable: [],
     renderTick:0,
     updateInterval:-1,
-    timeout:0,
-    styleObject: { 'background-color': 'black' },
+    timeout:0
   }),
+  components: {
+    Train
+  },
   props: {
+    siteName: String,
     siteId: String,
     dir: String,
     destFilter: Array
@@ -46,14 +44,13 @@ export default {
             this.trainTable = filteredTable;
           }
         }
-        this.trainTable = this.trainTable.slice(0,3);
-        this.statusMessage = this.trainTable[0].StopAreaName + " mot "+this.trainTable[0].Destination;
+        this.trainTable = this.trainTable.slice(0,4);
         this.trainTable.forEach((train) => {
-          train.moment = moment(train.TimeTabledDateTime);
+          train.moment = moment(train.ExpectedDateTime);
         })
         
         this.update();
-        this.updateInterval = setInterval(() => {  this.update() }, 1000);
+        this.updateInterval = setInterval(() => {  this.update() }, config.updateIntervalMs);
       } catch (e) {
         // eslint-disable-next-line
         console.info("Failed to load new data, trying again in 1 sec.");
@@ -63,20 +60,10 @@ export default {
     update() {
       if (this.hasValidTrainData()) {
         this.renderTick++;
-        let currentTimeDiff = moment(this.trainTable[0].TimeTabledDateTime).diff(moment());
-      
-        let textColor;
-        if (currentTimeDiff < 2*60*1000) {
-          textColor = "red";
-        } else if (currentTimeDiff < 5*60*1000) {
-          textColor = "orange";
-        } else {
-          textColor = "green";
-        }
-        this.styleObject['background-color'] = textColor;
-
+        let currentTimeDiff = moment(this.trainTable[0].ExpectedDateTime).diff(moment());
         const trainIsLeaving = currentTimeDiff < -10000;
-        //limit data refresh to each 10 sec during train depature
+
+        //limit data refresh to each 10 sec during train departure
         if (trainIsLeaving && this.renderTick%10 === 0) {
           this.refreshData();
         }
@@ -104,23 +91,11 @@ export default {
 
 <style scoped>
 div {
-  padding: 20px;
+  padding: 0px;
   color: white;
-  margin-bottom: 5px;
-}
-p {
-  font-size: 1.2em;
+  margin:2px;
 }
 h2 {
-  font-size: 1.1em;
-}
-ul {
-  list-style-type: none;
-  padding: 0;
-}
-li {
-  display: inline-block;
-  margin: 0 10px;
-  font-size: 1.3em;
+  margin:8px 0px 4px;
 }
 </style>

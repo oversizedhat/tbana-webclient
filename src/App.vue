@@ -1,8 +1,8 @@
 <template>
   <div id="app">
     <HelpBar />
-    <Timetable :siteId=home.siteId :dir=home.dir :destFilter=home.filter />
-    <Timetable :siteId=work.siteId :dir=work.dir :destFilter=work.filter />
+    <Timetable :siteName=from :siteId=home.siteId :dir=home.dir :destFilter=home.filter />
+    <Timetable :siteName=to :siteId=work.siteId :dir=work.dir :destFilter=work.filter />
   </div>
 </template>
 
@@ -41,13 +41,23 @@ export default {
 </script>
 
 <style>
+@import url('https://fonts.googleapis.com/css?family=Roboto+Condensed:Light');
+
 #app {
-  font-family: 'Avenir', Helvetica, Arial, sans-serif;
+  font-family: 'Roboto Condensed','Avenir', Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
   background-color:black;
-  color: #2c3e50;
-  margin-top: 0px;
+  color: white;
+  margin:0px;
+  padding:0px;
+  font-size: 1.2em;
+}
+h2 {
+  font-size: 80%;
+}
+h1 {
+  font-size: 120%;
 }
 </style>
