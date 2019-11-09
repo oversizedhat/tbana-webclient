@@ -93,7 +93,10 @@ export default {
 div {
   padding: 0px;
   color: white;
-  margin:2px;
+  margin-top: 0px;
+  margin-bottom: 0px;
+  margin-left: 3px;
+  margin-right: 3px;
 }
 h2 {
   margin:8px 0px 4px;
