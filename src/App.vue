@@ -58,6 +58,6 @@ h2 {
   font-size: 80%;
 }
 h1 {
-  font-size: 120%;
+  font-size: 110%;
 }
 </style>
