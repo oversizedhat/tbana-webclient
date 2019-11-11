@@ -1,42 +1,41 @@
 import Vue from 'vue'
 import App from './App.vue'
 import VueRouter from 'vue-router'
-import Home from './Home.vue'
-import config from './config';
+import Select from './Select.vue'
+import config from './config.js';
+import model from './datamodel.js';
 
-Vue.config.productionTip = false
+Vue.config.productionTip = false;
 
-Vue.use(VueRouter)
+Vue.use(VueRouter);
 
-function getRouteWithFilter(from, to, alias){
-  return { 
-    path: '/'+(from+'-'+to).toLowerCase(), 
-    component: App,
-    alias: alias,
-    props: {
-      from: from,
-      to: to
-    }
-  }
-}
-
-const travelRoutes = [
-  getRouteWithFilter('Bagarmossen', 'Rådmansgatan', '/oscar'),
-  getRouteWithFilter('Bagarmossen', 'Hötorget', '/anna'),
-  getRouteWithFilter('Skarpnäck', 'Rådmansgatan', '/kristian')
-]
-
-const allRoutes = travelRoutes.concat([
-    { path: '/', component: Home, props:{travelRoutes:travelRoutes}},
-    { path: '*', component: Home, props:{travelRoutes:travelRoutes}}
-  ]
-);
+const staticRoutes = [
+  { path: '/', component: App, meta: { requiresSitesInStorage: true }},
+  { path: '/select', component: Select},
+  { path: '*', component: Select}
+];
 
 const router = new VueRouter({
   mode: 'history',
   base: __dirname,
-  routes: allRoutes
-})
+  routes: staticRoutes
+});
+
+router.beforeEach((to, from, next) => {
+  if (to.matched.some(record => record.meta.requiresSitesInStorage)) {
+    const vs = model.isValidSiteName(localStorage.from) && model.isValidSiteName(localStorage.to);
+    if (!vs) {
+      next({
+        path: '/select'/*,
+        query: { redirect: to.fullPath }*/
+      })
+    } else {
+      next();
+    }
+  } else {
+    next();
+  }
+});
 
 new Vue({
   router,

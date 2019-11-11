@@ -20,10 +20,15 @@ export default {
   getSiteId,
   getDirection,
   getPossibleEndSiteFilter,
-  getAllSites
+  getAllSiteNames,
+  isValidSiteName
 }
 
-export function getAllSites() {
+export function isValidSiteName(siteName) {
+  return getAllSiteNames().includes(siteName);
+}
+
+export function getAllSiteNames() {
   return Object.keys(siteMap);
 }
 

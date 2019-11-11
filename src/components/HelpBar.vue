@@ -34,7 +34,6 @@ export default {
   justify-content:space-evenly;
 }
 div {
-  color: white;
   margin-bottom: 2px;
   width: 100%;
 }

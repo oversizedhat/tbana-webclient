@@ -7,7 +7,7 @@
     "build": "vue-cli-service build",
     "lint": "vue-cli-service lint",
     "siteids": "node utils/siteidsutil.js",
-    "deploy": "npm run build && aws s3 cp dist s3://www.coommuter.com --recursive",
+    "deploy": "npm run build && jest && aws s3 cp dist s3://www.coommuter.com --recursive",
     "test": "jest --watchAll"
   },
   "dependencies": {

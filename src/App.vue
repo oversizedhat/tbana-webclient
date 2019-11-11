@@ -3,19 +3,22 @@
     <HelpBar />
     <Timetable :siteName=from :siteId=home.siteId :dir=home.dir :destFilter=home.filter />
     <Timetable :siteName=to :siteId=work.siteId :dir=work.dir :destFilter=work.filter />
+    <router-link to="/select">VÄLJ STATIONER</router-link>
   </div>
 </template>
 
 <script>
 import Timetable from './components/Timetable.vue';
 import HelpBar from './components/HelpBar.vue';
-import model from './datamodel';
+import model from './datamodel.js';
 
 export default {
   name: 'app',
-  props:{
-    from: String,
-    to: String
+  data: function() {
+    return {
+      from: localStorage.from,
+      to: localStorage.to  
+    }
   },
   components: {
     Timetable,
@@ -58,5 +61,11 @@ h2 {
 }
 h1 {
   font-size: 110%;
+}
+a:visited {
+  color:grey;
+}
+a {
+  color:gray;
 }
 </style>
