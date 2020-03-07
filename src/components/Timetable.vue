@@ -1,6 +1,11 @@
 <template>
   <div :key="renderTick">
+ 
     <h2>{{ siteName }} </h2>
+    <div v-if="!hasValidTrainData()">
+      <p>Söker efter tunnelbanor för resa mot {{ destSiteName }}...</p>
+      <div class="lds-dual-ring"></div>
+    </div>
     <Train :train=item v-for="item in trainTable" v-bind:key="item.ExpectedDateTime" />
   </div>
 </template>
@@ -25,6 +30,7 @@ export default {
   },
   props: {
     siteName: String,
+    destSiteName: String,
     siteId: String,
     dir: String,
     destFilter: Array
@@ -93,12 +99,39 @@ export default {
 div {
   padding: 0px;
   color: white;
-  margin-top: 0px;
-  margin-bottom: 0px;
+  margin-top: 3px;
+  margin-bottom: 3px;
   margin-left: 3px;
   margin-right: 3px;
+  vertical-align: top;
 }
 h2 {
   margin:8px 0px 4px;
+}
+
+/*Loader spinner taken from loading.io/css - CC0 License*/
+.lds-dual-ring {
+  display: inline-block;
+  width: 80px;
+  height: 80px;
+}
+.lds-dual-ring:after {
+  content: " ";
+  display: block;
+  width: 64px;
+  height: 64px;
+  margin: 8px;
+  border-radius: 50%;
+  border: 6px solid #666666;
+  border-color: #666666 transparent #666666 transparent;
+  animation: lds-dual-ring 1.2s linear infinite;
+}
+@keyframes lds-dual-ring {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
 }
 </style>

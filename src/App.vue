@@ -1,9 +1,9 @@
 <template>
   <div id="app">
     <HelpBar />
-    <Timetable :siteName=from :siteId=home.siteId :dir=home.dir :destFilter=home.filter />
-    <Timetable :siteName=to :siteId=work.siteId :dir=work.dir :destFilter=work.filter />
-    <router-link to="/select">VÄLJ STATIONER</router-link>
+    <Timetable :siteName=from :destSiteName=to :siteId=home.siteId :dir=home.dir :destFilter=home.filter />
+    <Timetable :siteName=to :destSiteName=from :siteId=work.siteId :dir=work.dir :destFilter=work.filter />
+    <router-link to="/select">BYT STATIONER</router-link>
   </div>
 </template>
 

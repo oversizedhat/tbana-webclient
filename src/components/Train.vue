@@ -1,7 +1,8 @@
 <template>
   <div v-bind:style="styleObject">
       <h2>{{ train.Destination }}</h2>
-      <h1>{{ train.moment.fromNow() }}</h1>
+      <h1>{{ fromNowText() }}</h1>
+      <h2>{{ train.moment.format('LT') }}</h2>
   </div>
 </template>
 
@@ -16,6 +17,15 @@ export default {
     train: Object
   },
   methods: {
+    fromNowText() {
+      const fromNowText = this.train.moment.fromNow();
+      if (fromNowText == "om några sekunder" 
+        || fromNowText == "för några sekunder sedan" 
+        || fromNowText == "för en minut sedan") {
+        return "Nu!"
+      }
+      return fromNowText;
+    },
     update() {
         this.styleObject['background-color'] = this.getAttentionColor(this.train);
     },
@@ -45,7 +55,6 @@ h1 {
 div {
   display: inline-block;
   padding: 0;
-  overflow: hidden;
   min-height: 100px;
   width: 48%;
   min-width: 120px;
