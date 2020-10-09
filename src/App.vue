@@ -4,6 +4,7 @@
     <Timetable :siteName=from :destSiteName=to :siteId=home.siteId :dir=home.dir :destFilter=home.filter />
     <Timetable :siteName=to :destSiteName=from :siteId=work.siteId :dir=work.dir :destFilter=work.filter />
     <router-link to="/select">BYT STATIONER</router-link>
+    <div id="version">{{ appVersion }}</div>
   </div>
 </template>
 
@@ -17,7 +18,8 @@ export default {
   data: function() {
     return {
       from: localStorage.from,
-      to: localStorage.to  
+      to: localStorage.to,
+      appVersion: process.env.VUE_APP_VERSION
     }
   },
   components: {
@@ -55,6 +57,10 @@ export default {
   margin:0px;
   padding:0px;
   font-size: 1.2em;
+}
+#version {
+  color: rgb(63, 63, 63);
+  font-size: 0.7em;
 }
 h2 {
   font-size: 80%;

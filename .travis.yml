@@ -1,12 +1,19 @@
 language: node_js
 node_js:
   - 14
-deploy:
-  provider: s3
-  bucket: www.coommuter.com
-  region: eu-north-1
-  local_dir: ./dist
-  verbose: true
-  edge: true # opt in to dpl v2
-  on:
-    branch: ["master"]
+
+jobs:
+  include:
+    - stage: "test"
+      script: npm test
+    - stage: "deploy"
+      script: npm run build
+      deploy:
+        provider: s3
+        bucket: www.coommuter.com
+        region: eu-north-1
+        local_dir: ./dist
+        verbose: true
+        edge: true # opt in to dpl v2
+        on:
+          branch: ["s3deploy"]
