@@ -1,9 +1,12 @@
 <template>
   <div :key="renderTick">
     <h2>{{ siteName }} </h2>
-    <div v-if="!hasValidTrainData()">
+    <div v-if="isLoading()">
       <p>Söker efter tunnelbanor för resa mot {{ destSiteName }}...</p>
       <div class="lds-dual-ring" />
+    </div>
+    <div v-if="!isLoading() && !hasTrainsInTable()">
+      <p>Hittar inga tunnelbanor för resa mot {{ destSiteName }}... Provar igen om {{ (10 - renderTick) }}</p>
     </div>
     <Train
       v-for="item in trainTable"
@@ -49,7 +52,7 @@ export default {
     }
   },
   data: () => ({
-    trainTable: [],
+    trainTable: null,
     renderTick:0,
     updateInterval:-1,
     timeout:0
@@ -61,26 +64,35 @@ export default {
     this.clearAllIntervals();
   },
   methods: {
+    isLoading() {
+      return this.trainTable == null;
+    },
     hasValidTrainData() {
-      return this.trainTable && this.trainTable.length > 0;
+      return Array.isArray(this.trainTable);
+    },
+    hasTrainsInTable() {
+      return Array.isArray(this.trainTable) && this.trainTable.length > 1;
     },
     dataLoaded() {
       this.clearAllIntervals();
       try {
         this.trainTable = JSON.parse(this.request.responseText);
-     
-        if (this.destFilter && this.destFilter.length > 0) {
-          const filteredTable = this.trainTable.filter(train => this.destFilter.includes(train.Destination));
-          if (filteredTable.length > 0){
-            this.trainTable = filteredTable;
+
+        if (this.trainTable.length > 0) {
+          if (this.destFilter && this.destFilter.length > 0) {
+            const filteredTable = this.trainTable.filter(train => this.destFilter.includes(train.Destination));
+            if (filteredTable.length > 0){
+              this.trainTable = filteredTable;
+            }
           }
+          this.trainTable = this.trainTable.slice(0,4);
+          this.trainTable.forEach((train) => {
+            train.moment = moment(train.ExpectedDateTime);
+          })
         }
-        this.trainTable = this.trainTable.slice(0,4);
-        this.trainTable.forEach((train) => {
-          train.moment = moment(train.ExpectedDateTime);
-        })
         
         this.update();
+        this.renderTick = 0;
         this.updateInterval = setInterval(() => {  this.update() }, config.updateIntervalMs);
       } catch (e) {
         // eslint-disable-next-line
@@ -91,12 +103,18 @@ export default {
     update() {
       if (this.hasValidTrainData()) {
         this.renderTick++;
-        let currentTimeDiff = moment(this.trainTable[0].ExpectedDateTime).diff(moment());
-        const trainIsLeaving = currentTimeDiff < -10000;
 
-        //limit data refresh to each 10 sec during train departure
-        if (trainIsLeaving && this.renderTick%10 === 0) {
-          this.refreshData();
+        //limit data refresh to each 10 sec during train departure, or if no trains found
+        if (this.renderTick%10 === 0) {
+          if (this.trainTable.length > 0) {
+            let currentTimeDiff = moment(this.trainTable[0].ExpectedDateTime).diff(moment());
+            const trainIsLeaving = currentTimeDiff < -10000;
+            if (trainIsLeaving) {
+              this.refreshData();
+            }
+          } else {
+            this.refreshData();
+          }
         }
       }
     },

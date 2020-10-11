@@ -1,7 +1,7 @@
 <template>
   <div>
     <div class="header">
-      Välj två stationer
+      {{ headerText }}
     </div>
     <div
       v-for="siteName in allSites"
@@ -29,6 +29,9 @@ export default {
     allSites: function () {
       const siteNames = model.getAllSiteNames();
       return siteNames.sort();
+    },
+    headerText: function () {
+      return this.selected.length > 0?"Vart ska du åka?":"Vartifrån åker du?";
     }
   },
   mounted() {},
@@ -59,18 +62,21 @@ export default {
 div {
   font-size: larger;
   color: #dedede;
-  margin-bottom: 20px;
+  margin-bottom: 12px;
   display: flex;
   flex-direction: column;
+  min-height:35px;
 }
 .header {
   background-color: rgb(71, 71, 223);
-}
-
-.selected {
   position: -webkit-sticky;
   position: sticky;
   top: 0;
+}
+.selected {
+  position: -webkit-sticky;
+  position: sticky;
+  top: 35px;
   background-color: green;
 }
 </style>
