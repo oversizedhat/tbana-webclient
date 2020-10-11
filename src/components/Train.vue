@@ -1,8 +1,8 @@
 <template>
-  <div v-bind:style="styleObject">
-      <h2>{{ train.Destination }}</h2>
-      <h1>{{ fromNowText() }}</h1>
-      <h2>{{ train.moment.format('LT') }}</h2>
+  <div :style="styleObject">
+    <h2>{{ train.Destination }}</h2>
+    <h1>{{ fromNowText() }}</h1>
+    <h2>{{ train.moment.format('LT') }}</h2>
   </div>
 </template>
 
@@ -10,11 +10,17 @@
 import moment from 'moment';
 export default {
   name: 'Train',
+  props: {
+    train: {
+      type: Object,
+      required: true
+    }
+  },
   data: () => ({
     styleObject: { 'background-color': 'black' },
   }),
-  props: {
-    train: Object
+  mounted() {
+    this.styleObject['background-color'] = this.getAttentionColor(this.train);
   },
   methods: {
     fromNowText() {
@@ -38,9 +44,6 @@ export default {
       }
       return "green";
     }
-  },
-  mounted() {
-    this.styleObject['background-color'] = this.getAttentionColor(this.train);
   }
 }
 </script>

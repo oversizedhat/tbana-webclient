@@ -1,13 +1,13 @@
 <template>
   <div class="flex-container">
     <div class="green">
-      {{green}}
+      {{ green }}
     </div>
     <div class="orange">
-      {{orange}}
+      {{ orange }}
     </div>
     <div class="red">
-      {{red}}
+      {{ red }}
     </div>
   </div>
 </template>
@@ -15,14 +15,14 @@
 <script>
 export default {
   name: 'HelpBar',
+  props: {
+
+  },
   data: () => ({
     green: ">5min",
     orange: "<5min",
     red: "<2min"
   }),
-  props: {
-
-  },
   methods: {
   }
 }

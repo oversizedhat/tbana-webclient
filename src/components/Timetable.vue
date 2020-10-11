@@ -1,12 +1,15 @@
 <template>
   <div :key="renderTick">
- 
     <h2>{{ siteName }} </h2>
     <div v-if="!hasValidTrainData()">
       <p>Söker efter tunnelbanor för resa mot {{ destSiteName }}...</p>
-      <div class="lds-dual-ring"></div>
+      <div class="lds-dual-ring" />
     </div>
-    <Train :train=item v-for="item in trainTable" v-bind:key="item.ExpectedDateTime" />
+    <Train
+      v-for="item in trainTable"
+      :key="item.ExpectedDateTime"
+      :train="item"
+    />
   </div>
 </template>
 
@@ -19,21 +22,43 @@ moment.locale('sv');
 
 export default {
   name: 'Timetable',
+  components: {
+    Train
+  },
+  props: {
+    siteName: {
+      type: String,
+      required: true
+    },
+    destSiteName: {
+      type: String,
+      required: true
+    },
+    siteId: {
+      type: String,
+      required: true
+    },
+    dir: {
+      type: String,
+      required: true
+    },
+    destFilter: {
+      type: Array,
+      required: false,
+      default: () => [],
+    }
+  },
   data: () => ({
     trainTable: [],
     renderTick:0,
     updateInterval:-1,
     timeout:0
   }),
-  components: {
-    Train
+  mounted() {
+    this.refreshData();
   },
-  props: {
-    siteName: String,
-    destSiteName: String,
-    siteId: String,
-    dir: String,
-    destFilter: Array
+  destroyed() {
+    this.clearAllIntervals();
   },
   methods: {
     hasValidTrainData() {
@@ -85,12 +110,6 @@ export default {
       clearInterval(this.updateInterval);
       clearTimeout(this.timeout);
     }
-  },
-  mounted() {
-    this.refreshData();
-  },
-  destroyed() {
-    this.clearAllIntervals();
   }
 }
 </script>

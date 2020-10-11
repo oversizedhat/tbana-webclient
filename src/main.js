@@ -10,7 +10,7 @@ Vue.config.productionTip = false;
 Vue.use(VueRouter);
 
 const staticRoutes = [
-  { path: '/', component: App, meta: { requiresSitesInStorage: true }},
+  { path: '/', component: App, meta: { requiresSites: true }},
   { path: '/select', component: Select},
   { path: '*', component: Select}
 ];
@@ -22,12 +22,10 @@ const router = new VueRouter({
 });
 
 router.beforeEach((to, from, next) => {
-  if (to.matched.some(record => record.meta.requiresSitesInStorage)) {
-    const vs = model.isValidSiteName(localStorage.from) && model.isValidSiteName(localStorage.to);
-    if (!vs) {
+  if (to.matched.some(record => record.meta.requiresSites)) {
+    if (!model.hasActiveSites()) {
       next({
-        path: '/select'/*,
-        query: { redirect: to.fullPath }*/
+        path: '/select'
       })
     } else {
       next();
@@ -39,15 +37,15 @@ router.beforeEach((to, from, next) => {
 
 new Vue({
   router,
-  template: `
-    <div id="app">
-      <router-view class="view"></router-view>
-    </div>
-  `,
   beforeMount: function() {
     let mode = this.$route.query.mode;
     if (mode) { config.mode = mode }
     // eslint-disable-next-line
     console.log("Client running in mode=" + config.mode);
-  }
+  },
+  template: `
+    <div id="app">
+      <router-view class="view"></router-view>
+    </div>
+  `
 }).$mount('#app')

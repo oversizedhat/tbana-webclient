@@ -1,10 +1,26 @@
 <template>
   <div id="app">
     <HelpBar />
-    <Timetable :siteName=from :destSiteName=to :siteId=home.siteId :dir=home.dir :destFilter=home.filter />
-    <Timetable :siteName=to :destSiteName=from :siteId=work.siteId :dir=work.dir :destFilter=work.filter />
-    <router-link to="/select">BYT STATIONER</router-link>
-    <div id="version">{{ appVersion }}</div>
+    <Timetable
+      :site-name="from"
+      :dest-site-name="to"
+      :site-id="home.siteId"
+      :dir="home.dir"
+      :dest-filter="home.filter"
+    />
+    <Timetable
+      :site-name="to"
+      :dest-site-name="from"
+      :site-id="work.siteId"
+      :dir="work.dir"
+      :dest-filter="work.filter"
+    />
+    <router-link to="/select">
+      BYT STATIONER
+    </router-link>
+    <div id="version">
+      {{ appVersion }}
+    </div>
   </div>
 </template>
 
@@ -14,17 +30,17 @@ import HelpBar from './components/HelpBar.vue';
 import model from './datamodel.js';
 
 export default {
-  name: 'app',
-  data: function() {
-    return {
-      from: localStorage.from,
-      to: localStorage.to,
-      appVersion: process.env.VUE_APP_VERSION
-    }
-  },
+  name: 'App',
   components: {
     Timetable,
     HelpBar
+  },
+  data: function() {
+    return {
+      from: model.getActiveSites().from,
+      to: model.getActiveSites().to,
+      appVersion: process.env.VUE_APP_VERSION
+    }
   },
   computed: {
     home: function () {

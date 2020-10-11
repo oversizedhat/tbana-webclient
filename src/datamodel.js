@@ -21,22 +21,49 @@ export default {
   getDirection,
   getPossibleEndSiteFilter,
   getAllSiteNames,
-  isValidSiteName
+  isValidSiteName,
+  hasActiveSites,
+  setActiveSites,
+  getActiveSites
 }
 
-export function isValidSiteName(siteName) {
-  return getAllSiteNames().includes(siteName);
+function setActiveSites(from, to) {
+  from = from.trim();
+  to = to.trim();
+  if (!isValidSiteName(from)) {
+    throw new Error();
+  }
+  if (!isValidSiteName(to)) {
+    throw new Error();
+  }
+  localStorage.from = from;
+  localStorage.to = to;
 }
 
-export function getAllSiteNames() {
+function getActiveSites() {
+  return { 
+    from: localStorage.from,
+    to: localStorage.to
+  }
+}
+
+function hasActiveSites(){
+  return localStorage.from && localStorage.to;
+}
+
+function isValidSiteName(siteName) {
+  return getAllSiteNames().includes(siteName.trim());
+}
+
+function getAllSiteNames() {
   return Object.keys(siteMap);
 }
 
-export function getSiteId(name){
-  return siteMap[name].siteId;
+function getSiteId(name){
+  return siteMap[name.trim()].siteId;
 }
 
-export function getDirection(fromStation,toStation){
+function getDirection(fromStation,toStation){
   const lineContainingBoth = lineWithBoth(fromStation,toStation);
  
   if (lineContainingBoth){
@@ -63,7 +90,7 @@ export function getDirection(fromStation,toStation){
   throw "Failed to find direction";
 }
 
-export function getPossibleEndSiteFilter(fromStation, toStation, line) {
+function getPossibleEndSiteFilter(fromStation, toStation, line) {
   const dir = getDirection(fromStation, toStation);
   if (!line) line = lineWithBoth(fromStation, toStation);
   if (!line) {
