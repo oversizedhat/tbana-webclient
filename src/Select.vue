@@ -31,7 +31,7 @@ export default {
       return siteNames.sort();
     },
     headerText: function () {
-      return this.selected.length > 0?"Vart ska du åka?":"Vartifrån åker du?";
+      return this.selected.length > 0?"Vart ska du åka?":"Varifrån åker du?";
     }
   },
   mounted() {},
