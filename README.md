@@ -1,4 +1,6 @@
 # tbana-webclient
+[![Build Status](https://travis-ci.org/oversizedhat/tbana-webclient.svg?branch=master)](https://travis-ci.org/oversizedhat/tbana-webclient)
+
 Single page web app with display of Stockholm subway stations for anyone typically commuting between two stops.
 
 Made fun as an excuse to test out Vue.
